@@ -226,7 +226,8 @@ def index():
 
     performance = evaluate_detection(df_clean)
     anomalies = df_clean[df_clean['anomaly_combined'] == True].copy()
-    anomalies_cat = categorize_anomalies(anomalies, df_clean)    causes = analyze_causes(anomalies_cat)
+    anomalies_cat = categorize_anomalies(anomalies, df_clean)    
+    causes = analyze_causes(anomalies_cat)
 
     # Génération des graphiques
     img_buffers = {}
