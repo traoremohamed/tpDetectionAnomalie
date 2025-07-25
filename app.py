@@ -105,7 +105,7 @@ def evaluate_detection(df_clean):
         }
     return results
 
-def categorize_anomalies(df_anomalies):
+def categorize_anomalies(df_anomalies, df_clean):
     df_cat = df_anomalies.copy()
     median_sales = df_clean['sales'].median()
     conditions = [
@@ -226,8 +226,7 @@ def index():
 
     performance = evaluate_detection(df_clean)
     anomalies = df_clean[df_clean['anomaly_combined'] == True].copy()
-    anomalies_cat = categorize_anomalies(anomalies)
-    causes = analyze_causes(anomalies_cat)
+    anomalies_cat = categorize_anomalies(anomalies, df_clean)    causes = analyze_causes(anomalies_cat)
 
     # Génération des graphiques
     img_buffers = {}
@@ -292,10 +291,6 @@ def index():
     # Génération du rapport exécutif
     executive_report = generate_executive_report(df_clean, anomalies_cat, performance)
 
-    performance_text = '\n'.join([f"{method}: Précision={metrics['precision']:.3f}, Rappel={metrics['recall']:.3f}, F1={metrics['f1_score']:.3f}" for method, metrics in performance.items()])  
-
-    performance_ananlyse = '\n'.join([f"{cause}: {value:.1%}" for cause, value in causes.items()])
-
     html_content = f"""
     <!DOCTYPE html>
     <html lang="fr">
@@ -331,7 +326,7 @@ def index():
 
             <h2>Performance des Algorithmes</h2>
             <pre>
-                {performance_text}            
+                {'\n'.join([f"{method}: Précision={metrics['precision']:.3f}, Rappel={metrics['recall']:.3f}, F1={metrics['f1_score']:.3f}" for method, metrics in performance.items()])}
             </pre>
 
             <h2>Analyse des Anomalies Détectées</h2>
@@ -352,7 +347,7 @@ def index():
 {anomalies_cat['anomaly_category'].value_counts().to_string()}
 
                 Analyse des causes:
-                {performance_ananlyse}
+                {'\n'.join([f"{cause}: {value:.1%}" for cause, value in causes.items()])}
             </pre>
 
             <h2>Graphiques</h2>
