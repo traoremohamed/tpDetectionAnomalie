@@ -292,6 +292,11 @@ def index():
     # Génération du rapport exécutif
     executive_report = generate_executive_report(df_clean, anomalies_cat, performance)
 
+    performance_text = '\n'.join([f"{method}: Précision={metrics['precision']:.3f}, Rappel={metrics['recall']:.3f}, F1={metrics['f1_score']:.3f}" for method, metrics in performance.items()])  
+
+    performance_ananlyse = '\n'.join([f"{cause}: {value:.1%}" for cause, value in causes.items()])
+
+
     html_content = f"""
     <!DOCTYPE html>
     <html lang="fr">
@@ -327,7 +332,7 @@ def index():
 
             <h2>Performance des Algorithmes</h2>
             <pre>
-                {'\n'.join([f"{method}: Précision={metrics['precision']:.3f}, Rappel={metrics['recall']:.3f}, F1={metrics['f1_score']:.3f}" for method, metrics in performance.items()])}
+                {performance_text} 
             </pre>
 
             <h2>Analyse des Anomalies Détectées</h2>
@@ -348,7 +353,7 @@ def index():
 {anomalies_cat['anomaly_category'].value_counts().to_string()}
 
                 Analyse des causes:
-                {'\n'.join([f"{cause}: {value:.1%}" for cause, value in causes.items()])}
+                {performance_ananlyse}
             </pre>
 
             <h2>Graphiques</h2>
