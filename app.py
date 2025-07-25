@@ -311,7 +311,7 @@ def index():
             </pre>
 
             <h2>Anomalies Injectées</h2>
-            <pre>{df['anomaly_type'].value_counts().to_string()}</pre>
+            <pre>{df['anomaly_type'].value_counts().to_string().replace('\n', '\\n')}</pre>
 
             <h2>Performance des Algorithmes</h2>
             <pre>
@@ -324,16 +324,16 @@ def index():
                 Pourcentage des données: {len(anomalies) / len(df_clean) * 100:.1f}%
 
                 Répartition par type réel:
-{anomalies['anomaly_type'].value_counts().to_string()}
+{anomalies['anomaly_type'].value_counts().to_string().replace('\n', '\\n')}
 
                 Répartition par jour de la semaine:
-{anomalies['day_of_week'].value_counts().sort_index().to_string()}
+{anomalies['day_of_week'].value_counts().sort_index().to_string().replace('\n', '\\n')}
 
                 Répartition par mois:
-{anomalies['month'].value_counts().sort_index().to_string()}
+{anomalies['month'].value_counts().sort_index().to_string().replace('\n', '\\n')}
 
                 Catégorisation des anomalies:
-{anomalies_cat['anomaly_category'].value_counts().to_string()}
+{anomalies_cat['anomaly_category'].value_counts().to_string().replace('\n', '\\n')}
 
                 Analyse des causes:
                 {'\n'.join([f"{cause}: {value:.1%}" for cause, value in causes.items()])}
