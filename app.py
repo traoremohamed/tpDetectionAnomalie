@@ -185,8 +185,20 @@ class AnomalyAlertSystem:
         return recommendations
 
 def generate_executive_report(df_clean, anomalies, performance):
-    #report = f"""RAPPORT EXÉCUTIF \n                        Détection d'Anomalies - Ventes \n                        RÉSUMÉ EXÉCUTIF \n                        • Période analysée: {df_clean['date'].min().strftime('%d/%m/%Y')} - \n                        {df_clean['date'].max().strftime('%d/%m/%Y')} \n                        • Ventes moyennes: {df_clean['sales'].mean():.0f}€/jour \n                        • Anomalies détectées: {len(anomalies)} ({len(anomalies)/len(df_clean)*100:.1f}% des jours) \n                        • Performance système: F1-Score = {performance['anomaly_combined']['f1_score']:.3f}    \n                        ANOMALIES PRINCIPALES \n                        • Spikes (hausses): {len(anomalies[anomalies['anomaly_category'] == 'spike'])} événements \n                        • Chutes: {len(anomalies[anomalies['anomaly_category'] == 'drop'])} événements \n                        • Impact moyen: {((anomalies['sales'] - df_clean['sales'].mean()) / df_clean['sales'].mean() * \n                        100).mean():.1f}% \n                        """
-    report = f"""RAPPORT EXÉCUTIF \n Détection d'Anomalies - Ventes \n RÉSUMÉ EXÉCUTIF \n • Période analysée: {df_clean['date'].min().strftime('%d/%m/%Y')} - {df_clean['date'].max().strftime('%d/%m/%Y')} \n • Ventes moyennes: {df_clean['sales'].mean():.0f}€/jour \n • Anomalies détectées: {len(anomalies)} ({len(anomalies)/len(df_clean)*100:.1f}% des jours) \n • Performance système: F1-Score = {performance['anomaly_combined']['f1_score']:.3f} \n ANOMALIES PRINCIPALES \n • Spikes (hausses): {len(anomalies[anomalies['anomaly_category'] == 'spike'])} événements \n • Chutes: {len(anomalies[anomalies['anomaly_category'] == 'drop'])} événements \n • Impact moyen: {((anomalies['sales'] - df_clean['sales'].mean()) / df_clean['sales'].mean() * 100).mean():.1f}% \n """
+    report = f"""RAPPORT EXÉCUTIF
+Détection d'Anomalies - Ventes
+RÉSUMÉ EXÉCUTIF
+• Période analysée: {df_clean["date"].min().strftime("%d/%m/%Y")} -
+{df_clean["date"].max().strftime("%d/%m/%Y")}
+• Ventes moyennes: {df_clean["sales"].mean():.0f}€/jour
+• Anomalies détectées: {len(anomalies)} ({len(anomalies)/len(df_clean)*100:.1f}% des jours)
+• Performance système: F1-Score = {performance["anomaly_combined"]["f1_score"]:.3f}
+ANOMALIES PRINCIPALES
+• Spikes (hausses): {len(anomalies[anomalies["anomaly_category"] == "spike"])} événements
+• Chutes: {len(anomalies[anomalies["anomaly_category"] == "drop"])} événements
+• Impact moyen: {((anomalies["sales"] - df_clean["sales"].mean()) / df_clean["sales"].mean() *
+100).mean():.1f}%
+"""
     return report
 
 @app.route('/')
@@ -311,7 +323,7 @@ def index():
             </pre>
 
             <h2>Anomalies Injectées</h2>
-            <pre>{df['anomaly_type'].value_counts().to_string().replace('\n', '\\n')}</pre>
+            <pre>{df['anomaly_type'].value_counts().to_string()}</pre>
 
             <h2>Performance des Algorithmes</h2>
             <pre>
@@ -324,16 +336,16 @@ def index():
                 Pourcentage des données: {len(anomalies) / len(df_clean) * 100:.1f}%
 
                 Répartition par type réel:
-{anomalies['anomaly_type'].value_counts().to_string().replace('\n', '\\n')}
+{anomalies['anomaly_type'].value_counts().to_string()}
 
                 Répartition par jour de la semaine:
-{anomalies['day_of_week'].value_counts().sort_index().to_string().replace('\n', '\\n')}
+{anomalies['day_of_week'].value_counts().sort_index().to_string()}
 
                 Répartition par mois:
-{anomalies['month'].value_counts().sort_index().to_string().replace('\n', '\\n')}
+{anomalies['month'].value_counts().sort_index().to_string()}
 
                 Catégorisation des anomalies:
-{anomalies_cat['anomaly_category'].value_counts().to_string().replace('\n', '\\n')}
+{anomalies_cat['anomaly_category'].value_counts().to_string()}
 
                 Analyse des causes:
                 {'\n'.join([f"{cause}: {value:.1%}" for cause, value in causes.items()])}
